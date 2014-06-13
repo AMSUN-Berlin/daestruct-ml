@@ -26,16 +26,19 @@
  *
  *)
 
-type input_t
+open Batteries
+open Core.Std
+open Core_bench.Std
 
-external input_create : int -> input_t = "daestruct_ml_input_create"
+open ScaleCircuit
 
-external input_set : input_t -> int -> int -> int -> unit = "daestruct_ml_input_set"
+let bench_inst n = Bench.Test.create (fun() -> ignore ( inst_circuit n )) ~name:(Printf.sprintf "instantiate (%d)" n)
 
-type result_t
+let sizes = [5 ; 50 ; 100 ; 1000 ; 10000 ]
 
-external analyse : input_t -> result_t = "daestruct_ml_analyse"
+let tests = List.map sizes  bench_inst
 
-external equation_index : result_t -> int -> int = "daestruct_ml_equation_index"
-
-external variable_index : result_t -> int -> int = "daestruct_ml_variable_index"
+let () = 
+  tests
+  |> Bench.make_command 
+  |> Command.run

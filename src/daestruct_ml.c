@@ -59,6 +59,8 @@ CAMLprim value daestruct_ml_input_create(value dim) {
  
   block = caml_alloc_custom(&ida_ctxt_ops, sizeof(struct daestruct_input*), 1, 10);
 
+  int dimension = Int_val(dim);
+  printf("Creating dimension: %d\n", dimension);
   struct daestruct_input* inp = daestruct_input_create(Int_val(dim)); 
 
   INPUT(block) = inp;
@@ -68,7 +70,7 @@ CAMLprim value daestruct_ml_input_create(value dim) {
 
 CAMLprim value daestruct_ml_input_set(value problem, value variable, value equation, value derivative) {
   CAMLparam4(problem, variable, equation, derivative);
-  daestruct_input_set(Data_custom_val(problem), Int_val(variable), Int_val(equation), Int_val(derivative));
+  daestruct_input_set(INPUT(problem), Int_val(variable), Int_val(equation), Int_val(derivative));
   CAMLreturn (Val_unit);
 }
 

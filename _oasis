@@ -18,3 +18,11 @@ Library daestruct
   CSources:   daestruct_ml.c
   CCOpt:      -std=c11
   CCLib:      -ldaestruct
+
+Executable bench
+  Path:       src/bench
+  CompiledObject: best
+  BuildTools: ocamlbuild
+  BuildDepends: daestruct, batteries, core_bench, core
+  MainIs: benchmark.ml
+
