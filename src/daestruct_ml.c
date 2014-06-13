@@ -37,8 +37,10 @@
 
 #include <daestruct.h>
 
+#define INPUT(block) *((struct daestruct_input**)Data_custom_val(block))
+
 void daestruct_ml_input_finalize(value v) {
-  daestruct_input_delete(Data_custom_val(v));
+  daestruct_input_delete(INPUT(v));
 }
 
 CAMLprim value daestruct_ml_input_create(value dim) {
@@ -57,7 +59,9 @@ CAMLprim value daestruct_ml_input_create(value dim) {
  
   block = caml_alloc_custom(&ida_ctxt_ops, sizeof(struct daestruct_input*), 1, 10);
 
-  Data_custom_val(block) = daestruct_input_create(Int_val(dim)); 
+  struct daestruct_input* inp = daestruct_input_create(Int_val(dim)); 
+
+  INPUT(block) = inp;
 
   CAMLreturn (block);
 }
@@ -65,6 +69,6 @@ CAMLprim value daestruct_ml_input_create(value dim) {
 CAMLprim value daestruct_ml_input_set(value problem, value variable, value equation, value derivative) {
   CAMLparam4(problem, variable, equation, derivative);
   daestruct_input_set(Data_custom_val(problem), Int_val(variable), Int_val(equation), Int_val(derivative));
-  CAMLreturn (unit_val);
+  CAMLreturn (Val_unit);
 }
  
