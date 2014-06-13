@@ -1,0 +1,20 @@
+OASISFormat: 0.4
+Name:        daestruct-ml
+Version:     0.1
+Synopsis:    OCaml bindings for libdaestruct
+Authors:     Christoph Höger <christoph.hoeger@tu-berlin.de>
+License:     BSD-3-clause
+Plugins:     META (0.4), StdFiles (0.4), DevFiles (0.4)
+
+# for corebuild compatibility:
+AlphaFeatures:           ocamlbuild_more_args
+XOCamlbuildExtraArgs:    -j 4 -tag thread -tag annot -tag bin_annot -tag short_paths
+
+Library daestruct
+  Path:       src
+  CompiledObject: best
+  BuildTools: ocamlbuild
+  Modules:    Daestruct
+  CSources:   daestruct_ml.c
+  CCOpt:      -I$path -std=c11
+  CCLib:      -ldaestruct
