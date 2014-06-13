@@ -71,4 +71,43 @@ CAMLprim value daestruct_ml_input_set(value problem, value variable, value equat
   daestruct_input_set(Data_custom_val(problem), Int_val(variable), Int_val(equation), Int_val(derivative));
   CAMLreturn (Val_unit);
 }
+
+#define RESULT(v) (*(struct daestruct_result**)Data_custom_val(v))
+
+void daestruct_ml_result_finalize(value v) {
+  daestruct_result_delete(RESULT(v));
+}
+
+CAMLprim value daestruct_ml_analyse(value problem) {
+  static struct custom_operations ida_ctxt_ops = {
+    "daestruct_input",
+    daestruct_ml_result_finalize,
+    custom_compare_default,
+    custom_hash_default,
+    custom_serialize_default,
+    custom_deserialize_default,
+  };
+
+  CAMLparam1(problem);
+
+  CAMLlocal1 (block);
+ 
+  block = caml_alloc_custom(&ida_ctxt_ops, sizeof(struct daestruct_input*), 1, 10);
+  
+  RESULT(block) = daestruct_analyse(INPUT(problem));
+
+  CAMLreturn(block);
+}
+
+CAMLprim value daestruct_ml_result_equation_index(value result, value equation) {
+  CAMLparam2(result, equation);
+  CAMLreturn( Val_int( daestruct_result_equation_index(RESULT(result), Int_val(equation)) ) );
+}
+
+CAMLprim value daestruct_ml_result_variable_index(value result, value variable) {
+  CAMLparam2(result, variable);
+  CAMLreturn( Val_int( daestruct_result_variable_index(RESULT(result), Int_val(variable)) ) );
+}
+
+
  
