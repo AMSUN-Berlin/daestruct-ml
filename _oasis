@@ -16,5 +16,5 @@ Library daestruct
   BuildTools: ocamlbuild
   Modules:    Daestruct
   CSources:   daestruct_ml.c
-  CCOpt:      -I$path -std=c11
+  CCOpt:      -std=c11
   CCLib:      -ldaestruct
